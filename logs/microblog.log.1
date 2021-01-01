@@ -1,0 +1,81 @@
+2020-12-31 10:22:46,666 ERROR: Exception on /explore [GET] [in c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\flask\app.py:1891]
+Traceback (most recent call last):
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "C:\Users\matthewfoulk\Documents\programming\flask-tutorial\app\routes.py", line 141, in explore
+    return render_template('index.html', title='Explore', posts=posts)
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\flask\templating.py", line 137, in render_template
+    return _render(
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\flask\templating.py", line 120, in _render
+    rv = template.render(context)
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\jinja2\environment.py", line 1090, in render
+    self.environment.handle_exception()
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\jinja2\environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\jinja2\_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "C:\Users\matthewfoulk\Documents\programming\flask-tutorial\app\templates\index.html", line 1, in top-level template code
+    {% extends 'base.html' %}
+  File "C:\Users\matthewfoulk\Documents\programming\flask-tutorial\app\templates\base.html", line 31, in top-level template code
+    {% block content %}{% endblock %}
+  File "C:\Users\matthewfoulk\Documents\programming\flask-tutorial\app\templates\index.html", line 19, in block "content"
+    {% include '_post.html' %}
+  File "C:\Users\matthewfoulk\Documents\programming\flask-tutorial\app\templates\_post.html", line 4, in top-level template code
+    <td><img src="{{ post.author.avatar(36) }}"></td>
+jinja2.exceptions.UndefinedError: 'None' has no attribute 'avatar'
+2020-12-31 10:22:59,502 ERROR: Exception on /explore [GET] [in c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\flask\app.py:1891]
+Traceback (most recent call last):
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "C:\Users\matthewfoulk\Documents\programming\flask-tutorial\app\routes.py", line 141, in explore
+    return render_template('index.html', title='Explore', posts=posts)
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\flask\templating.py", line 137, in render_template
+    return _render(
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\flask\templating.py", line 120, in _render
+    rv = template.render(context)
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\jinja2\environment.py", line 1090, in render
+    self.environment.handle_exception()
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\jinja2\environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "c:\users\matthewfoulk\appdata\local\programs\python\python38\lib\site-packages\jinja2\_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "C:\Users\matthewfoulk\Documents\programming\flask-tutorial\app\templates\index.html", line 1, in top-level template code
+    {% extends 'base.html' %}
+  File "C:\Users\matthewfoulk\Documents\programming\flask-tutorial\app\templates\base.html", line 31, in top-level template code
+    {% block content %}{% endblock %}
+  File "C:\Users\matthewfoulk\Documents\programming\flask-tutorial\app\templates\index.html", line 19, in block "content"
+    {% include '_post.html' %}
+  File "C:\Users\matthewfoulk\Documents\programming\flask-tutorial\app\templates\_post.html", line 4, in top-level template code
+    <td><img src="{{ post.author.avatar(36) }}"></td>
+jinja2.exceptions.UndefinedError: 'None' has no attribute 'avatar'
+2020-12-31 10:26:05,086 INFO: Microblog startup [in C:\Users\matthewfoulk\Documents\programming\flask-tutorial\app\__init__.py:50]
+2020-12-31 10:28:45,016 INFO: Microblog startup [in C:\Users\matthewfoulk\Documents\programming\flask-tutorial\app\__init__.py:50]
+2020-12-31 10:34:05,723 INFO: Microblog startup [in C:\Users\matthewfoulk\Documents\programming\flask-tutorial\app\__init__.py:50]
+2020-12-31 10:49:39,352 INFO: Microblog startup [in C:\Users\matthewfoulk\Documents\programming\flask-tutorial\app\__init__.py:50]
+2020-12-31 10:50:32,186 INFO: Microblog startup [in C:\Users\matthewfoulk\Documents\programming\flask-tutorial\app\__init__.py:50]
+2020-12-31 11:00:08,102 INFO: Microblog startup [in C:\Users\matthewfoulk\Documents\programming\flask-tutorial\app\__init__.py:50]
+2020-12-31 11:00:32,880 INFO: Microblog startup [in C:\Users\matthewfoulk\Documents\programming\flask-tutorial\app\__init__.py:50]
