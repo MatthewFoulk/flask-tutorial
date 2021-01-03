@@ -1,11 +1,11 @@
 from datetime import datetime
 
-from flask import render_template, flash, redirect, url_for, request, current_app
+from flask import current_app, flash, g, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from app import db
 from app.main import bp
-from app.main.forms import EditProfileForm, EmptyForm, PostForm
+from app.main.forms import EditProfileForm, EmptyForm, PostForm, SearchForm
 from app.models import User, Post
 
 
@@ -14,6 +14,7 @@ def before_request():
     if current_user.is_authenticated:
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
+        g.search_form = SearchForm()
 
 @bp.route('/', methods=['GET', 'POST'])
 @bp.route('/index', methods=['GET', 'POST'])
@@ -32,9 +33,9 @@ def index():
     next_url = url_for('main.index', page=posts.next_num) \
         if posts.has_next else None
     prev_url = url_for('main.index', page=posts.prev_num) \
-        if posts.has_prev else None
+        if posts.has_prev else None 
     return render_template('index.html', title='Home Page', form=form,
-                           posts=posts.items, next_url=next_url,
+                           posts=posts.items, next_url=next_url, 
                            prev_url=prev_url)
 
 
@@ -65,7 +66,7 @@ def explore():
     next_url = url_for('main.explore', page=posts.next_num) \
         if posts.has_next else None
     prev_url = url_for('main.explore', page=posts.prev_num) \
-        if posts.has_next else None
+        if posts.has_prev else None
     return render_template('index.html', title='Explore', posts=posts.items,
                            next_url=next_url, prev_url=prev_url)
 
@@ -124,3 +125,21 @@ def user(username):
     form = EmptyForm()
     return render_template('user.html', user=user, posts=posts.items,
                            next_url=next_url, prev_url=prev_url, form=form)
+
+
+@bp.route('/search')
+@login_required
+def search():
+    # Validate NOT validate on_submit because 
+    # this is a GET request
+    if not g.search_form.validate():
+        return redirect(url_for('main.explore'))
+    page = request.args.get('page', 1, type=int)
+    posts, total = Post.search(g.search_form.q.data, page,
+                                current_app.config['POSTS_PER_PAGE'])
+    next_url = url_for('main.search', q=g.search_form.q.data, page=page+1) \
+        if total > page * current_app.config['POSTS_PER_PAGE'] else None
+    prev_url = url_for('main.search', q=g.search_form.q.data, page=page-1) \
+        if page > 1 else None
+    return render_template('search.html', title='Search', posts=posts,
+                            next_url=next_url, prev_url=prev_url)

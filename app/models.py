@@ -9,8 +9,78 @@ import jwt
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import db, login
+from app.search import add_to_index, remove_from_index, query_index
 
 
+class SearchableMixin():
+    @classmethod
+    def search(cls, expression, page, per_page):
+        ids, total = query_index(cls.__tablename__, expression, page, per_page)
+        
+        # No matching entries found
+        if total == 0:
+            return cls.query.filter_by(id=0), 0
+
+        # Constructing the 'when' part of a SQL case statement
+        when = []
+        for i in range(len(ids)):
+            when.append((ids[i], i))
+
+        # Uses a case statement to preserve the order
+        # returned from the full-text search 
+        return cls.query.filter(cls.id.in_(ids)).order_by(
+            db.case(when, value=cls.id)), total
+
+    
+    @classmethod
+    def before_commit(cls, session):
+
+        # Saving the information regarding database changes
+        # prior to commmitting
+        # Write to _changes because it will survive the commit
+        session._changes = {
+            'add': list(session.new), # objects to add
+            'update': list(session.dirty), # objects to modify
+            'delete': list(session.deleted) # objects to delete
+        }
+    
+
+    @classmethod
+    def after_commit(cls, session):
+        # Modify full-text search indexing after commit
+        # to database
+
+        # Add a new obj
+        for obj in session._changes['add']:
+            if isinstance(obj, SearchableMixin):
+                add_to_index(obj.__tablename__, obj)
+        
+        # Modify an older one, by overwriting it
+        for obj in session._changes['update']:
+            if isinstance(obj, SearchableMixin):
+                add_to_index(obj.__tablename__, obj)
+        
+        # Remove an obj from the index
+        for obj in session._changes['delete']:
+            if isinstance(obj, SearchableMixin):
+                remove_from_index(obj.__tablename__, obj)
+        
+        # Clear the _changes dict
+        session._changes = None
+
+    
+    @classmethod
+    def reindex(cls):
+        # Helper method, used to refresh an index with
+        # all the data from the relational side
+        for obj in cls.query:
+            add_to_index(cls.__tablename__, obj)
+
+# Listen to db to trigger events before and after commits
+db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
+db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
+
+# Followers table
 followers = db.Table('followers',
     db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
@@ -84,7 +154,8 @@ def load_user(id):
     return User.query.get(int(id))
 
 
-class Post(db.Model):
+class Post(SearchableMixin, db.Model):
+    __searchable__ = ['body']
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
